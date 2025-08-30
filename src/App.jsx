@@ -1,28 +1,10 @@
+import { useSelector } from "react-redux";
 import "./App.css";
 
-function App() {
-  const headers = ["S.No", "Title", "Assigned to", "Status", "Action"];
+const headers = ["S.No", "Title", "Assigned to", "Status", "Action"];
 
-  const todos = [
-    {
-      id: "abc",
-      title: "ABC",
-      assignedTo: "Pooja",
-      status: "Pending",
-    },
-    {
-      id: "def",
-      title: "DEF",
-      assignedTo: "Pooja",
-      status: "In Progress",
-    },
-    {
-      id: "ghi",
-      title: "EFG",
-      assignedTo: "Pooja",
-      status: "Done",
-    },
-  ];
+function App() {
+  const todos = useSelector((state) => state.todos);
 
   return (
     <div className="bg-green-50 w-full min-h-screen flex flex-col gap-4 items-center py-16">

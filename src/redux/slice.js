@@ -3,30 +3,21 @@ import { createSlice } from "@reduxjs/toolkit";
 const slice = createSlice({
   name: "todoSlice",
   initialState: {
-    todos: [
-      {
-        id: "abc",
-        title: "ABC",
-        assignedTo: "Pooja",
-        status: "Pending",
-      },
-      {
-        id: "def",
-        title: "DEF",
-        assignedTo: "Pooja",
-        status: "In Progress",
-      },
-      {
-        id: "ghi",
-        title: "EFG",
-        assignedTo: "Pooja",
-        status: "Done",
-      },
-    ],
+    todos: [],
   },
-  reducers: {},
+  reducers: {
+    createTodo: (state, action) => {
+      const newTodo = {
+        id: crypto.randomUUID(),
+        title: action.payload.title,
+        assignedTo: action.payload.assignedTo,
+        status: action.payload.status,
+      };
+      state.todos = [...state.todos, newTodo];
+    },
+  },
 });
 
-// export const { incremented, decremented } = counterSlice.actions;
+export const { createTodo } = slice.actions;
 
 export default slice.reducer;

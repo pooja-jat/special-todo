@@ -1,12 +1,14 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "./App.css";
 import CreateModal from "./components/CreateModal";
 import { useState } from "react";
+import { deleteTodo } from "./redux/slice";
 
 const headers = ["S.No", "Title", "Assigned to", "Status", "Action"];
 
 function App() {
   const todos = useSelector((state) => state.todos);
+  const dispatch = useDispatch();
 
   const [visible, setVisible] = useState(false);
   const [todoToUpdate, setTodoToUpdate] = useState(null);
@@ -18,6 +20,10 @@ function App() {
   const handleUpdateTodo = (todo) => {
     setTodoToUpdate(todo);
     setVisible(true);
+  };
+
+  const handleDeleteTodo = (id) => {
+    dispatch(deleteTodo(id));
   };
 
   return (
@@ -90,7 +96,10 @@ function App() {
                         >
                           E
                         </button>
-                        <button className="bg-red-200 w-10 h-10 rounded-full flex items-center justify-center ">
+                        <button
+                          onClick={() => handleDeleteTodo(item.id)}
+                          className="bg-red-200 w-10 h-10 rounded-full flex items-center justify-center "
+                        >
                           D
                         </button>
                       </div>

@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { createTodo } from "../redux/slice";
+import React, { useEffect, useState } from "react";
+import { createTodo, updateTodo } from "../redux/slice";
 import { useDispatch } from "react-redux";
 
-function CreateModal({ setVisible }) {
+function CreateModal({ setVisible, todoToUpdate }) {
   const dispatch = useDispatch();
 
   const handleCancel = () => {
@@ -10,13 +10,13 @@ function CreateModal({ setVisible }) {
   };
 
   const [form, setForm] = useState({
-    name: "",
+    title: "",
     assignedTo: "",
     status: "",
   });
 
   const [formError, setFormError] = useState({
-    name: "",
+    title: "",
     assignedTo: "",
     status: "",
   });
@@ -27,12 +27,12 @@ function CreateModal({ setVisible }) {
     let _formError = { ...formError };
     // 1. validate name
     // 1.1 name should not be longer than 10 characters
-    if (form.name.length === 0) {
-      _formError.name = "Required field";
+    if (form.title.length === 0) {
+      _formError.title = "Required field";
       hasError = true;
     }
-    if (form.name.length > 10) {
-      _formError.name = "Max length 10";
+    if (form.title.length > 10) {
+      _formError.title = "Max length 10";
       hasError = true;
     }
     // 2. assigned to
@@ -62,11 +62,20 @@ function CreateModal({ setVisible }) {
       });
     }
 
-    dispatch(createTodo(form));
+    if (todoToUpdate) {
+      dispatch(updateTodo({ ...form, id: todoToUpdate.id }));
+    } else {
+      dispatch(createTodo(form));
+    }
+
     setVisible(false);
   };
 
-  console.log("formError", formError);
+  useEffect(() => {
+    if (todoToUpdate) {
+      setForm(todoToUpdate);
+    }
+  }, [todoToUpdate]);
 
   return (
     <div class="absolute flex items-center justify-center w-full h-screen z-1">
@@ -76,17 +85,19 @@ function CreateModal({ setVisible }) {
       >
         <div>
           <input
+            value={form.title}
             class="border border-gray-300 rounded-lg w-full p-2 outline-none"
-            placeholder="Name"
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            placeholder="Title"
+            onChange={(e) => setForm({ ...form, title: e.target.value })}
           />
-          {formError.name && (
-            <p className="text-xs px-2 text-red-500">{formError.name}</p>
+          {formError.title && (
+            <p className="text-xs px-2 text-red-500">{formError.title}</p>
           )}
         </div>
 
         <div>
           <input
+            value={form.assignedTo}
             class="border border-gray-300 rounded-lg w-full p-2 outline-none"
             placeholder="Assigned to"
             onChange={(e) => setForm({ ...form, assignedTo: e.target.value })}
@@ -98,6 +109,7 @@ function CreateModal({ setVisible }) {
 
         <div>
           <select
+            value={form.status}
             class="border border-gray-300 rounded-lg w-full p-2 outline-none"
             onChange={(e) => setForm({ ...form, status: e.target.value })}
           >
@@ -119,7 +131,7 @@ function CreateModal({ setVisible }) {
             CANCEL
           </button>
           <button className="w-full cursor-pointer bg-green-200 border-1 border-green-700 rounded-md px-2 py-1 font-semibold">
-            SAVE
+            {todoToUpdate ? "UPDATE" : "SAVE"}
           </button>
         </div>
       </form>

@@ -15,9 +15,19 @@ const slice = createSlice({
       };
       state.todos = [...state.todos, newTodo];
     },
+    updateTodo: (state, action) => {
+      const newTodo = {
+        id: action.id,
+        title: action.payload.title,
+        assignedTo: action.payload.assignedTo,
+        status: action.payload.status,
+      };
+      const index = state.todos.findIndex((t) => t.id === action.id);
+      state.todos.splice(index, 1, newTodo);
+    },
   },
 });
 
-export const { createTodo } = slice.actions;
+export const { createTodo, updateTodo } = slice.actions;
 
 export default slice.reducer;

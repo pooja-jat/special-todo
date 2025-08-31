@@ -8,15 +8,23 @@ const headers = ["S.No", "Title", "Assigned to", "Status", "Action"];
 function App() {
   const todos = useSelector((state) => state.todos);
 
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
+  const [todoToUpdate, setTodoToUpdate] = useState(null);
 
   const handleCreateTodo = () => {
     setVisible(true);
   };
 
+  const handleUpdateTodo = (todo) => {
+    setTodoToUpdate(todo);
+    setVisible(true);
+  };
+
   return (
     <>
-      {visible && <CreateModal setVisible={setVisible} />}
+      {visible && (
+        <CreateModal setVisible={setVisible} todoToUpdate={todoToUpdate} />
+      )}
       <div className="bg-green-50 w-full min-h-screen flex flex-col gap-4 items-center py-16">
         <h1 className="font-bold text-3xl">Todos</h1>
 
@@ -76,7 +84,10 @@ function App() {
                     </td>
                     <td>
                       <div className="flex flex-row gap-4">
-                        <button className="bg-green-200 w-10 h-10 rounded-full flex items-center justify-center ">
+                        <button
+                          onClick={() => handleUpdateTodo(item)}
+                          className="bg-green-200 w-10 h-10 rounded-full flex items-center justify-center "
+                        >
                           E
                         </button>
                         <button className="bg-red-200 w-10 h-10 rounded-full flex items-center justify-center ">
